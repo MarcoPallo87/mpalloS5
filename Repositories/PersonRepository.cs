@@ -11,7 +11,7 @@ namespace mpalloS5.Repositories
         string _dbPath;
         private SQLiteConnection _conn;
 
-        public string StatusMessaage { get; set; }
+        public string StatusMessage { get; set; }
         public PersonRepository(string dbPath)
         {
             _dbPath = dbPath;
@@ -36,11 +36,11 @@ namespace mpalloS5.Repositories
                     throw new Exception("Nombre es requerido");
                 Persona persona = new() { Name = name };
                 result = _conn.Insert(persona);
-                StatusMessaage = string.Format("Dato Ingresado");
+                StatusMessage = string.Format("Dato Ingresado");
             }
             catch(Exception ex)
             {
-                StatusMessaage = string.Format("Error " + ex.Message);
+                StatusMessage = string.Format("Error " + ex.Message);
             }
         }
 
@@ -54,7 +54,7 @@ namespace mpalloS5.Repositories
             }
             catch (Exception ex)
             {
-                StatusMessaage = string.Format("Error " + ex.Message);
+                StatusMessage = string.Format("Error " + ex.Message);
             }
             return new List<Persona>();
 
@@ -68,11 +68,11 @@ namespace mpalloS5.Repositories
             {
                 Init();
                 _conn.Delete<Persona>(id);
-                StatusMessaage = string.Format("Dato Eliminado");
+                StatusMessage = string.Format("Dato Eliminado");
             }
             catch (Exception ex)
             {
-                StatusMessaage = string.Format("Error " + ex.Message);
+                StatusMessage = string.Format("Error " + ex.Message);
             }
         }
 

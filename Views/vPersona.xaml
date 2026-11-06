@@ -3,69 +3,51 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="mpalloS5.Views.vPersona"
              Title="vPersona">
-    <VerticalStackLayout Padding="20" Spacing="20">
 
-        <Label 
-            Text="Semana 5: BASES DE DATOS LOCALES"
-            FontSize="20"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="10">
 
-        <Entry x:Name="txtName"
-               Placeholder="Ingresa el Nombre"/>
+            <Label 
+                Text="Semana 5: BASES DE DATOS LOCALES"
+                FontSize="20"
+                VerticalOptions="Center" 
+                HorizontalOptions="Center" />
 
-        <Grid Padding="5" RowSpacing="5" ColumnSpacing="5">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+            <Entry x:Name="txtName"
+                   Placeholder="Ingresa el Nombre"/>
 
             <Button x:Name="btnAgregar"
                     Text="Agregar Persona"
-                    Clicked="btnAgregar_Clicked"
-                    Grid.Row="1"
-                    Grid.Column="0"/>
+                    Clicked="btnAgregar_Clicked"/>
 
             <Label x:Name="lblStatusMessage"
-                   TextColor="Red"
-                   Grid.Row="1"
-                   Grid.Column="0"/>
+                   TextColor="Red" />
 
             <Button x:Name="btnMostrar"
                     Text="Mostrar Personas"
-                    Clicked="btnMostrar_Clicked"
-                    Grid.Row="2"
-                    Grid.Column="0"/>
+                    Clicked="btnMostrar_Clicked"/>
 
-            <CollectionView x:Name="ListaPersonas"
-                          Grid.Row="3"
-                          Grid.Column="0">
+            <CollectionView x:Name="ListaPersonas" 
+                            VerticalOptions="FillAndExpand"
+                            HeightRequest="300">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid Padding="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="50"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="80"/>
                             </Grid.ColumnDefinitions>
+
                             <Label Text="{Binding Id}"
-                                   Grid.Row="0"
                                    Grid.Column="0"
                                    VerticalOptions="Center"/>
+
                             <Label Text="{Binding Name}"
-                                   Grid.Row="0"
                                    Grid.Column="1"
                                    VerticalOptions="Center"/>
+
                             <Button Text="Eliminar"
-                                    Grid.Row="0"
                                     Grid.Column="2"
                                     BackgroundColor="Red"
                                     TextColor="White"
@@ -77,6 +59,7 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-        </Grid>
-    </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

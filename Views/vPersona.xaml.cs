@@ -9,17 +9,53 @@ public partial class vPersona : ContentPage
         InitializeComponent();
     }
 
-    private void btnMostrar_Clicked(object sender, EventArgs e)
+    private async void btnMostrar_Clicked(object sender, EventArgs e)
     {
-        List<Persona> people = App._personRepo.GetAllPerson();
-        ListaPersonas.ItemsSource = people;
+        try
+        {
+            List<Persona> people = App._personRepo.GetAllPerson();
+            ListaPersonas.ItemsSource = people;
+
+            if (people.Count == 0)
+            {
+                await DisplayAlertAsync("Aviso", "La lista está vacía. No hay personas guardadas.", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Error al mostrar", ex.Message, "OK");
+        }
     }
 
-    private void btnAgregar_Clicked(object sender, EventArgs e)
+    private async void btnAgregar_Clicked(object sender, EventArgs e)
     {
-        lblStatusMessage.Text = "";
-        App._personRepo.AddNewPerson(txtName.Text);
-        lblStatusMessage.Text = App._personRepo.StatusMessaage;
+        try
+        {
+            lblStatusMessage.Text = "";
+
+            if (string.IsNullOrWhiteSpace(txtName.Text))
+            {
+                await DisplayAlertAsync("Error", "Por favor, ingrese un nombre.", "OK");
+                return;
+            }
+
+            App._personRepo.AddNewPerson(txtName.Text);
+            lblStatusMessage.Text = App._personRepo.StatusMessage;
+
+            if (App._personRepo.StatusMessage.Contains("Error"))
+            {
+                await DisplayAlertAsync("Error al guardar", App._personRepo.StatusMessage, "OK");
+            }
+            else
+            {
+                txtName.Text = "";
+                await DisplayAlertAsync("Éxito", "Persona guardada correctamente. Presione 'Mostrar Personas' para actualizar la lista.", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Error inesperado", ex.Message, "OK");
+        }
     }
 
     private async void btnEliminar_Clicked(object sender, EventArgs e)
@@ -35,13 +71,15 @@ public partial class vPersona : ContentPage
             if (confirmar)
             {
                 App._personRepo.DeletePerson(idPersona);
-                lblStatusMessage.Text = App._personRepo.StatusMessaage;
+                lblStatusMessage.Text = App._personRepo.StatusMessage;
+
+                // Aquí sí actualizamos la lista automáticamente para que veas que se borró
                 btnMostrar_Clicked(sender, e);
             }
         }
         catch (Exception ex)
         {
-            lblStatusMessage.Text = "Error: " + ex.Message;
+            await DisplayAlertAsync("Error al eliminar", ex.Message, "OK");
         }
     }
 }
