@@ -62,6 +62,19 @@ namespace mpalloS5.Repositories
 
         //Delete
 
+        public void DeletePerson(int id)
+        {
+            try
+            {
+                Init();
+                _conn.Delete<Persona>(id);
+                StatusMessaage = string.Format("Dato Eliminado");
+            }
+            catch (Exception ex)
+            {
+                StatusMessaage = string.Format("Error " + ex.Message);
+            }
+        }
 
         //Update
 
