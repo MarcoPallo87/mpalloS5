@@ -1,0 +1,69 @@
+﻿using SQLite;
+using mpalloS5.Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace mpalloS5.Repositories
+{
+    public class PersonRepository
+    {
+        string _dbPath;
+        private SQLiteConnection _conn;
+
+        public string StatusMessaage { get; set; }
+        public PersonRepository(string dbPath)
+        {
+            _dbPath = dbPath;
+        }
+
+        private void Init()
+        {
+            if (_conn is not null)
+                return;
+            _conn = new(_dbPath);
+            _conn.CreateTable<Persona>();
+        }
+
+        //Insert
+        public void AddNewPerson(string name)
+        {
+            int result = 0;
+            try
+            {
+                Init();
+                if (string.IsNullOrEmpty(name))
+                    throw new Exception("Nombre es requerido");
+                Persona persona = new() { Name = name };
+                result = _conn.Insert(persona);
+                StatusMessaage = string.Format("Dato Ingresado");
+            }
+            catch(Exception ex)
+            {
+                StatusMessaage = string.Format("Error " + ex.Message);
+            }
+        }
+
+        //select
+        public List<Persona>GetAllPerson()
+        {
+            try
+            {
+                Init();
+                return _conn.Table<Persona>().ToList();
+            }
+            catch (Exception ex)
+            {
+                StatusMessaage = string.Format("Error " + ex.Message);
+            }
+            return new List<Persona>();
+
+        }
+
+        //Delete
+
+
+        //Update
+
+    }
+}
