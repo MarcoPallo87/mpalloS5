@@ -78,5 +78,34 @@ namespace mpalloS5.Repositories
 
         //Update
 
+        public void UpdatePerson(int id, string newName)
+        {
+            try
+            {
+                Init();
+                if (string.IsNullOrEmpty(newName))
+                    throw new Exception("El nombre es requerido");
+
+                // Buscar a la persona por su ID
+                Persona persona = _conn.Find<Persona>(id);
+
+                if (persona != null)
+                {
+                    //Asignamos nuevo nombre y guardamos cambios
+                    persona.Name = newName;
+                    _conn.Update(persona);
+                    StatusMessage = string.Format("Dato Actualizado");
+                }
+                else
+                {
+                    StatusMessage = string.Format("Error: Persona no encontrada");
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = string.Format("Error " + ex.Message);
+            }
+        }
+
     }
 }

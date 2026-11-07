@@ -4,6 +4,8 @@ namespace mpalloS5.Views;
 
 public partial class vPersona : ContentPage
 {
+    int idEditar = 0;
+
     public vPersona()
     {
         InitializeComponent();
@@ -39,22 +41,64 @@ public partial class vPersona : ContentPage
                 return;
             }
 
-            App._personRepo.AddNewPerson(txtName.Text);
-            lblStatusMessage.Text = App._personRepo.StatusMessage;
-
-            if (App._personRepo.StatusMessage.Contains("Error"))
+            if (idEditar > 0)
             {
-                await DisplayAlertAsync("Error al guardar", App._personRepo.StatusMessage, "OK");
+                App._personRepo.UpdatePerson(idEditar, txtName.Text);
+                lblStatusMessage.Text = App._personRepo.StatusMessage;
+
+                if (App._personRepo.StatusMessage.Contains("Error"))
+                {
+                    await DisplayAlertAsync("Error al actualizar", App._personRepo.StatusMessage, "OK");
+                }
+                else
+                {
+                    txtName.Text = "";
+                    idEditar = 0;
+                    btnAgregar.Text = "Agregar Persona";
+                    btnMostrar_Clicked(sender, e);
+                }
             }
             else
             {
-                txtName.Text = "";
-                await DisplayAlertAsync("Éxito", "Persona guardada correctamente. Presione 'Mostrar Personas' para actualizar la lista.", "OK");
+                App._personRepo.AddNewPerson(txtName.Text);
+                lblStatusMessage.Text = App._personRepo.StatusMessage;
+
+                if (App._personRepo.StatusMessage.Contains("Error"))
+                {
+                    await DisplayAlertAsync("Error al guardar", App._personRepo.StatusMessage, "OK");
+                }
+                else
+                {
+                    txtName.Text = "";
+                    await DisplayAlertAsync("Éxito", "Persona guardada correctamente. Presione 'Mostrar Personas' para actualizar la lista.", "OK");
+                }
             }
         }
         catch (Exception ex)
         {
             await DisplayAlertAsync("Error inesperado", ex.Message, "OK");
+        }
+    }
+
+    private void btnEditar_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var button = (Button)sender;
+            idEditar = (int)button.CommandParameter;
+
+            var persona = App._personRepo.GetAllPerson().FirstOrDefault(p => p.Id == idEditar);
+
+            if (persona != null)
+            {
+                txtName.Text = persona.Name;
+                lblStatusMessage.Text = "Editando persona con ID: " + idEditar;
+                btnAgregar.Text = "Guardar Cambios";
+            }
+        }
+        catch (Exception ex)
+        {
+            lblStatusMessage.Text = "Error: " + ex.Message;
         }
     }
 
@@ -72,8 +116,6 @@ public partial class vPersona : ContentPage
             {
                 App._personRepo.DeletePerson(idPersona);
                 lblStatusMessage.Text = App._personRepo.StatusMessage;
-
-                // Aquí sí actualizamos la lista automáticamente para que veas que se borró
                 btnMostrar_Clicked(sender, e);
             }
         }
